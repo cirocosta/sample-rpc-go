@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"net"
+	"net/http"
 	"net/rpc"
 	"strconv"
 
@@ -11,6 +12,7 @@ import (
 
 type Server struct {
 	Port     uint
+	UseHttp  bool
 	listener net.Listener
 }
 
@@ -35,6 +37,12 @@ func (s *Server) Start() (err error) {
 		return
 	}
 
-	rpc.Accept(s.listener)
+	if s.UseHttp {
+		rpc.HandleHTTP()
+		http.Serve(s.listener, nil)
+	} else {
+		rpc.Accept(s.listener)
+	}
+
 	return
 }

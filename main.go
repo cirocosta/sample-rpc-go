@@ -22,6 +22,7 @@ func must(err error) {
 var (
 	port     = flag.Uint("port", 1337, "port to listen or connect to for rpc calls")
 	isServer = flag.Bool("server", false, "activates server mode")
+	http     = flag.Bool("http", false, "whether it should use HTTP")
 )
 
 // handleSignals is a blocking function that waits for termination/interrupt
@@ -45,12 +46,17 @@ func handleSignals() {
 func main() {
 	flag.Parse()
 
+	if *http {
+		log.Println("will use http")
+	}
+
 	if *isServer {
 		log.Println("starting server")
 		log.Printf("will listen on port %d\n", *port)
 
 		server := &Server{
-			Port: *port,
+			UseHttp: *http,
+			Port:    *port,
 		}
 
 		go func() {
@@ -67,7 +73,8 @@ func main() {
 	log.Printf("will connect to port %d\n", *port)
 
 	client := &Client{
-		Port: *port,
+		UseHttp: *http,
+		Port:    *port,
 	}
 
 	response, err := client.Execute("ciro")
