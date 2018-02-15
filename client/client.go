@@ -6,7 +6,7 @@ import (
 	"net/rpc/jsonrpc"
 	"strconv"
 
-	"github.com/cirocosta/sample-rpc/core"
+	"github.com/cirocosta/sample-rpc-go/core"
 )
 
 type Client struct {

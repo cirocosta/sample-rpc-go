@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	. "github.com/cirocosta/sample-rpc/client"
-	. "github.com/cirocosta/sample-rpc/server"
+	. "github.com/cirocosta/sample-rpc-go/client"
+	. "github.com/cirocosta/sample-rpc-go/server"
 )
 
 func must(err error) {
