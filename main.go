@@ -11,13 +11,6 @@ import (
 	. "github.com/cirocosta/sample-rpc-go/server"
 )
 
-func must(err error) {
-	if err == nil {
-		return
-	}
-
-	log.Panicln(err)
-}
 
 var (
 	port     = flag.Uint("port", 1337, "port to listen or connect to for rpc calls")
@@ -44,6 +37,17 @@ func handleSignals() {
 	log.Println("signal received")
 }
 
+// must panics in the case of error.
+func must(err error) {
+	if err == nil {
+		return
+	}
+
+	log.Panicln(err)
+}
+
+// main execution - validates flags and constructs the internal
+// runtime configuration based on the flags supplied.
 func main() {
 	flag.Parse()
 
