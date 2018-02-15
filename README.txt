@@ -1,42 +1,43 @@
 
+        DESCRIPTION
 
-The net/rpc package is frozen and is not accepting new features.
+                sample-rpc-go provides an example of a client-server
+                communication making use of `net/rpc` and `net/rpc/jsonrpc`.
 
+                Both client and server are meant to be run using a single
+                binary - to run a server, turn the `-server` flag on:
 
-        >       Package rpc provides access to the exported methods
-                of an object across a network or other I/O connection.
+                        ./main -server
 
+                There are three modes supported:
 
-        >       A server registers an object, making it visible as a service
-                with the name of the type of the object.
+                        - default:      binary RPC (encoding/gob) via pure TCP
+                        - http:         binary RPC (encoding/god) via HTTP
+                        - json:         JSON-RPC (1.0) via TCP
 
-        >       After registration, exported methods of the object will be
-                accessible remotely.
-
-
-        >       A server may register multiple objects (services) of different
-                types but it is an error to register multiple objects of the same
-                type.
-
-                It must satisfy the contraints:
-
-                        - the method's type is exported.
-                        - the method is exported.
-                        - the method has two arguments, both exported (or builtin) types.
-                        - the method's second argument is a pointer.
-                        - the method has return type error.
-
-                meaning that it must have the following signature:
+                These modes are meant to be used together (server and client should
+                be on the same mode) and can be activated with the respective flags.
 
 
-                        func (t *T) MethodName(argType T1, replyType *T2) error
+        USAGE
+
+                ./main --help
+                Usage of ./main:
+                  -http
+                        whether it should use HTTP
+                  -json
+                        whether it should use json-rpc
+                  -port uint
+                        port to listen or connect to for rpc calls (default 1337)
+                  -server
+                        activates server mode
 
 
-                where T1 and T2 can be marshaled by `encoding/gob`:
+        HACK
 
+                # Produce a binary called `main` in the repository root
+                make build
 
-                        Package gob manages streams of gobs - binary values exchanged
-                        between an Encoder (transmitter) and a Decoder (receiver).
+                # Format
+                make fmt
 
-                        A typical use is transporting arguments and results of remote
-                        procedure calls (RPCs) such as those provided by package "net/rpc".
