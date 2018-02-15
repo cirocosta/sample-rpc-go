@@ -9,19 +9,21 @@ import (
 	"github.com/cirocosta/sample-rpc-go/core"
 )
 
+// Client contains the configuration options for
+// a RPC client that communicates with a RPC server
+// over the network.
+//
+// Its parameters should match the server, for instance,
+// if the server is offered via HTTP, it should have
+// the property UseHttp set to true.
 type Client struct {
 	Port    uint
 	UseHttp bool
 	UseJson bool
+	client  *rpc.Client
 }
 
-func (c *Client) Execute(name string) (msg string, err error) {
-	var (
-		client   *rpc.Client
-		request  = &core.Request{Name: name}
-		response = new(core.Response)
-	)
-
+func (c *Client) Init() (err error) {
 	if c.Port == 0 {
 		err = errors.New("client: port must be specified")
 		return
@@ -30,18 +32,36 @@ func (c *Client) Execute(name string) (msg string, err error) {
 	addr := "127.0.0.1:" + strconv.Itoa(int(c.Port))
 
 	if c.UseHttp {
-		client, err = rpc.DialHTTP("tcp", addr)
+		c.client, err = rpc.DialHTTP("tcp", addr)
 	} else if c.UseJson {
-		client, err = jsonrpc.Dial("tcp", addr)
+		c.client, err = jsonrpc.Dial("tcp", addr)
 	} else {
-		client, err = rpc.Dial("tcp", addr)
+		c.client, err = rpc.Dial("tcp", addr)
 	}
-
 	if err != nil {
 		return
 	}
 
-	err = client.Call("Handler.SayHello", request, response)
+	return
+}
+
+func (c *Client) Close() (err error) {
+	if c.client != nil {
+		err = c.client.Close()
+		return
+	}
+
+	return
+}
+
+// TODO add context
+func (c *Client) Execute(name string) (msg string, err error) {
+	var (
+		request  = &core.Request{Name: name}
+		response = new(core.Response)
+	)
+
+	err = c.client.Call(core.HandlerName, request, response)
 	if err != nil {
 		return
 	}

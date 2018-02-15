@@ -2,6 +2,7 @@ package core
 
 import (
 	"errors"
+	"time"
 )
 
 type Response struct {
@@ -13,12 +14,20 @@ type Request struct {
 	Name string
 }
 
-type Handler struct{}
+const HandlerName = "Handler.Execute"
 
-func (h *Handler) SayHello(req Request, res *Response) (err error) {
+type Handler struct {
+	Sleep time.Duration
+}
+
+func (h *Handler) Execute(req Request, res *Response) (err error) {
 	if req.Name == "" {
 		err = errors.New("A name must be specified")
 		return
+	}
+
+	if h.Sleep != 0 {
+		time.Sleep(h.Sleep)
 	}
 
 	res.Ok = true
