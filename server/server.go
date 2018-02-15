@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/http"
 	"net/rpc"
+	"net/rpc/jsonrpc"
 	"strconv"
 
 	"github.com/cirocosta/sample-rpc/core"
@@ -13,6 +14,7 @@ import (
 type Server struct {
 	Port     uint
 	UseHttp  bool
+	UseJson  bool
 	listener net.Listener
 }
 
@@ -40,6 +42,18 @@ func (s *Server) Start() (err error) {
 	if s.UseHttp {
 		rpc.HandleHTTP()
 		http.Serve(s.listener, nil)
+	} else if s.UseJson {
+		var conn net.Conn
+
+		for {
+			conn, err = s.listener.Accept()
+			if err != nil {
+				return
+			}
+
+			jsonrpc.ServeConn(conn)
+		}
+
 	} else {
 		rpc.Accept(s.listener)
 	}

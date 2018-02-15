@@ -3,6 +3,7 @@ package client
 import (
 	"errors"
 	"net/rpc"
+	"net/rpc/jsonrpc"
 	"strconv"
 
 	"github.com/cirocosta/sample-rpc/core"
@@ -11,6 +12,7 @@ import (
 type Client struct {
 	Port    uint
 	UseHttp bool
+	UseJson bool
 }
 
 func (c *Client) Execute(name string) (msg string, err error) {
@@ -29,9 +31,12 @@ func (c *Client) Execute(name string) (msg string, err error) {
 
 	if c.UseHttp {
 		client, err = rpc.DialHTTP("tcp", addr)
+	} else if c.UseJson {
+		client, err = jsonrpc.Dial("tcp", addr)
 	} else {
 		client, err = rpc.Dial("tcp", addr)
 	}
+
 	if err != nil {
 		return
 	}

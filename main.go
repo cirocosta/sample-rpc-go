@@ -22,6 +22,7 @@ func must(err error) {
 var (
 	port     = flag.Uint("port", 1337, "port to listen or connect to for rpc calls")
 	isServer = flag.Bool("server", false, "activates server mode")
+	json     = flag.Bool("json", false, "whether it should use json-rpc")
 	http     = flag.Bool("http", false, "whether it should use HTTP")
 )
 
@@ -50,12 +51,17 @@ func main() {
 		log.Println("will use http")
 	}
 
+	if *json {
+		log.Println("will use json")
+	}
+
 	if *isServer {
 		log.Println("starting server")
 		log.Printf("will listen on port %d\n", *port)
 
 		server := &Server{
 			UseHttp: *http,
+			UseJson: *json,
 			Port:    *port,
 		}
 
@@ -74,6 +80,7 @@ func main() {
 
 	client := &Client{
 		UseHttp: *http,
+		UseJson: *json,
 		Port:    *port,
 	}
 
