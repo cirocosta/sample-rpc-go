@@ -92,14 +92,6 @@ func runClient() {
 func main() {
 	flag.Parse()
 
-	if *http {
-		log.Println("will use http")
-	}
-
-	if *json {
-		log.Println("will use json")
-	}
-
 	if *isServer {
 		log.Println("starting server")
 		log.Printf("will listen on port %d\n", *port)

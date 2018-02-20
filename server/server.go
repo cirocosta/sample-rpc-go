@@ -1,3 +1,8 @@
+// server Implements an RPC server that exposes
+// a hello-world to RPC clients.
+//
+// The server is accessible either via HTTP, TCP
+// or JSON-RPC.
 package server
 
 import (
@@ -12,6 +17,8 @@ import (
 	"github.com/cirocosta/sample-rpc-go/core"
 )
 
+// Server holds the configuration used to initiate
+// an RPC server.
 type Server struct {
 	Port     uint
 	UseHttp  bool
@@ -20,6 +27,7 @@ type Server struct {
 	listener net.Listener
 }
 
+// Close gracefully terminates the server listener.
 func (s *Server) Close() (err error) {
 	if s.listener != nil {
 		err = s.listener.Close()
@@ -28,6 +36,16 @@ func (s *Server) Close() (err error) {
 	return
 }
 
+// Starts initializes the RPC server by first verifying
+// if all the necessary configuration has been set.
+//
+// It then publishes the receiver's methods (core.Handler)
+// in the default RPC server. By doing so, the `Handler`
+// public methods that satisfy the rpc interface become
+// available to clients connecting to this server.
+//
+// With the receiver registered, it starts the server
+// such that new connections can be accepted.
 func (s *Server) Start() (err error) {
 	if s.Port <= 0 {
 		err = errors.New("port must be specified")

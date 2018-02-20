@@ -1,3 +1,9 @@
+// client implements a RPC client that can connect
+// to a RPC server by either using plain TCP, HTTP
+// or JSON-RPC.
+//
+// It consumes the `core` package to communicate
+// with the server.
 package client
 
 import (
