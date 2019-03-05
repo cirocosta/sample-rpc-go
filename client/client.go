@@ -1,4 +1,4 @@
-// client implements a RPC client that can connect
+/ client implements a RPC client that can connect
 // to a RPC server by either using plain TCP, HTTP
 // or JSON-RPC.
 //
@@ -7,7 +7,6 @@
 package client
 
 import (
-	"context"
 	"errors"
 	"net/rpc"
 	"net/rpc/jsonrpc"
@@ -88,7 +87,7 @@ func (c *Client) Close() (err error) {
 // To have the benefits of `context` we can then wrap `client.Call()`
 // with this `Execute` method and provide the proper deadline
 // enforcement and the other cancellation features.
-func (c *Client) Execute(ctx context.Context, name string) (msg string, err error) {
+func (c *Client) Execute(name string) (msg string, err error) {
 	var (
 		request  = &core.Request{Name: name}
 		response = new(core.Response)
